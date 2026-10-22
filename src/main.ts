@@ -7,6 +7,7 @@ import { editorScreen } from './ui/editor.ts';
 import { repertoriosScreen, repertorioScreen, importRepScreen } from './ui/repertorios.ts';
 import { favoritesScreen } from './ui/favorites.ts';
 import { bulkScreen } from './ui/bulk.ts';
+import { toolsScreen } from './ui/tools.ts';
 import { adminScreen, aboutScreen, homeScreen, settingsScreen, soonScreen } from './ui/screens.ts';
 
 type Route = [RegExp, (m: RegExpMatchArray) => HTMLElement | Promise<HTMLElement>];
@@ -19,6 +20,7 @@ const routes: Route[] = [
   [/^\/import\/([A-Za-z0-9_-]+)$/, (m) => importRepScreen(m[1] ?? '')],
   [/^\/favorites$/, () => favoritesScreen()],
   [/^\/bulk$/, () => bulkScreen()],
+  [/^\/tools$/, () => toolsScreen()],
   [/^\/edit\/(new|\d+)$/, (m) => editorScreen(m[1] === 'new' ? undefined : Number(m[1]))],
   [/^\/admin$/, () => adminScreen()],
   [/^\/settings$/, () => settingsScreen()],

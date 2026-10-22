@@ -78,3 +78,24 @@ button,input,select,textarea{font:inherit;color:inherit}
 .picker{max-height:45vh;overflow:auto;margin-top:8px}.picker .row{width:100%;text-align:left;background:none;border-left:0;border-right:0;border-top:0;cursor:pointer}
 .pill.full{width:100%;margin-top:12px}.gap{margin-top:14px}
 .pill:disabled{opacity:.5;cursor:default}
+
+.tabs{display:flex;gap:8px;padding:12px 14px 4px;flex:none}.tabs .chip{flex:1;text-align:center}
+.panel{padding:6px 14px 24px}
+.tn{font-size:56px;font-weight:800;text-align:center;line-height:1.1;margin-top:8px}
+.tm{text-align:center;font-weight:700;min-height:24px;margin:6px 0 2px}.tm.ok{color:var(--acc)}
+.th{text-align:center;font-size:13px;color:var(--mut);min-height:18px;margin-bottom:14px}
+.meter{position:relative;height:16px;border-radius:99px;background:var(--panel);margin:6px 10px 4px}
+.meter .mid{position:absolute;left:50%;top:-5px;bottom:-5px;width:2px;background:var(--mut)}
+.meter .zone{position:absolute;left:45%;width:10%;top:0;bottom:0;background:var(--acc);opacity:.25;border-radius:4px}
+.needle{position:absolute;top:-6px;width:8px;height:28px;border-radius:4px;background:var(--chord);left:50%;transform:translateX(-50%);transition:left .12s}
+.needle.ok{background:var(--acc)}
+.mlabels{display:flex;justify-content:space-between;font-size:12px;color:var(--mut);padding:6px 10px 0}
+.strs{display:flex;gap:8px;flex-wrap:wrap;margin:6px 0 4px}.strs .chip{min-width:62px;text-align:center}
+.chip.hit{outline:3px solid var(--acc)}
+.range{width:100%;accent-color:var(--acc);height:40px}
+.bpm{font-size:64px;font-weight:800;text-align:center;line-height:1}.bpm small{display:block;font-size:13px;color:var(--mut);font-weight:600}
+.dots{display:flex;justify-content:center;gap:12px;margin:16px 0}
+.dot{width:22px;height:22px;border-radius:50%;background:var(--panel);border:2px solid var(--line);transition:transform .08s}
+.dot.on{background:var(--acc);border-color:var(--acc);transform:scale(1.3)}.dot.first{border-color:var(--chord)}.dot.first.on{background:var(--chord)}
+.btnrow{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin:8px 0}
+.big{min-height:56px;font-size:17px;width:100%;margin-top:10px}

@@ -18,7 +18,7 @@ export function homeScreen(): HTMLElement {
       tile('⭐', 'Favoritos y recientes', 'Tus cantos más usados', '#/favorites'),
       tile('📄', 'Exportar PDF', 'Cancionero para imprimir', '#/soon/Exportar PDF'),
       tile('📖', 'Liturgia musical', 'Normas para elegir los cantos', '#/soon/Liturgia musical'),
-      tile('🎚', 'Afinador y metrónomo', 'Herramientas para tocar', '#/soon/Afinador y metrónomo'),
+      tile('🎚', 'Afinador y metrónomo', 'Herramientas para tocar', '#/tools'),
       tile('🛠', 'Administración de Cancionero', 'Agregar, editar, respaldo', '#/admin'),
       tile('⚙️', 'Ajustes', 'Notación, tema y color', '#/settings'),
       tile('ℹ️', 'Acerca de', 'La app y sus creadores', '#/about'))));
@@ -33,7 +33,7 @@ export function soonScreen(name: string): HTMLElement {
 export function aboutScreen(): HTMLElement {
   return h('section', { class: 'scr' }, hero('ACERCA DE', 'CANTORAL CATÓLICO', '#/'),
     h('div', { class: 'pad' }, h('div', { class: 'card pad' },
-      h('h3', {}, 'Cantoral Católico'), h('p', { class: 'mut' }, 'Versión 0.3 (Fase 2)'),
+      h('h3', {}, 'Cantoral Católico'), h('p', { class: 'mut' }, 'Versión 0.4 (Fase 4)'),
       h('p', { class: 'mut' }, 'Desarrolladores: por definir'), h('p', { class: 'mut' }, 'Contacto: por definir'),
       h('p', { class: 'mut' }, 'Funciona sin conexión a internet. Tus canciones se guardan en este teléfono; haz respaldos con frecuencia.'))));
 }

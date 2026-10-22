@@ -14,8 +14,8 @@ export function homeScreen(): HTMLElement {
     h('div', { class: 'hero big' }, h('h1', {}, 'CANTORAL CATÓLICO'), h('p', {}, 'Letras y acordes siempre a la mano, también sin internet.')),
     h('div', { class: 'list pad' }, h('div', { class: 'grid' },
       tile('🎶', 'Cancionero', 'Busca y filtra tus cantos', '#/songs'),
-      tile('📋', 'Repertorios', 'Listas por misa, para compartir', '#/soon/Repertorios'),
-      tile('⭐', 'Favoritos y recientes', 'Tus cantos más usados', '#/soon/Favoritos y recientes'),
+      tile('📋', 'Repertorios', 'Listas por misa, para compartir', '#/repertorios'),
+      tile('⭐', 'Favoritos y recientes', 'Tus cantos más usados', '#/favorites'),
       tile('📄', 'Exportar PDF', 'Cancionero para imprimir', '#/soon/Exportar PDF'),
       tile('📖', 'Liturgia musical', 'Normas para elegir los cantos', '#/soon/Liturgia musical'),
       tile('🎚', 'Afinador y metrónomo', 'Herramientas para tocar', '#/soon/Afinador y metrónomo'),
@@ -33,7 +33,7 @@ export function soonScreen(name: string): HTMLElement {
 export function aboutScreen(): HTMLElement {
   return h('section', { class: 'scr' }, hero('ACERCA DE', 'CANTORAL CATÓLICO', '#/'),
     h('div', { class: 'pad' }, h('div', { class: 'card pad' },
-      h('h3', {}, 'Cantoral Católico'), h('p', { class: 'mut' }, 'Versión 0.2 (Fase 1)'),
+      h('h3', {}, 'Cantoral Católico'), h('p', { class: 'mut' }, 'Versión 0.3 (Fase 2)'),
       h('p', { class: 'mut' }, 'Desarrolladores: por definir'), h('p', { class: 'mut' }, 'Contacto: por definir'),
       h('p', { class: 'mut' }, 'Funciona sin conexión a internet. Tus canciones se guardan en este teléfono; haz respaldos con frecuencia.'))));
 }
@@ -55,11 +55,11 @@ async function restoreFrom(file: File): Promise<void> {
   const run = (mode: 'merge' | 'replace') => async (): Promise<void> => {
     try {
       const r = await importBackup(data, mode);
-      toast(mode === 'merge' ? `Se agregaron ${r.added} canciones (${r.skipped} ya existían).` : `Se restauraron ${r.added} canciones.`);
+      toast((mode === 'merge' ? `Se agregaron ${r.added} canciones (${r.skipped} ya existían)` : `Se restauraron ${r.added} canciones`) + (r.reps ? ` y ${r.reps} repertorios.` : '.'));
       refresh();
     } catch (e) { toast(e instanceof Error ? e.message : 'No se pudo restaurar el respaldo.'); }
   };
-  sheet('Restaurar respaldo', h('p', { class: 'mut' }, `El archivo trae ${count} canciones. "Agregar las que faltan" conserva lo que ya tienes; "Reemplazar todo" borra tu cancionero actual.`),
+  sheet('Restaurar respaldo', h('p', { class: 'mut' }, `El archivo trae ${count} canciones (y sus repertorios, si los tiene). "Agregar las que faltan" conserva lo que ya tienes; "Reemplazar todo" borra tu cancionero actual.`),
     [{ label: 'Cancelar' }, { label: 'Agregar las que faltan', primary: true, run: run('merge') }, { label: 'Reemplazar todo', run: run('replace') }]);
 }
 
@@ -76,7 +76,7 @@ export function adminScreen(): HTMLElement {
       h('p', { class: 'lb' }, 'Canciones'),
       row('＋', 'Agregar canción', 'Escribe o pega la letra con acordes', '#/edit/new'),
       row('✎', 'Editar o eliminar', 'Elige una canción de la lista', '#/songs/edit'),
-      row('📥', 'Importar varias canciones', 'Llega en la siguiente fase', () => toast('Llega en la siguiente fase')),
+      row('📥', 'Importar varias canciones', 'Carga muchas canciones de una vez', '#/bulk'),
       h('p', { class: 'lb' }, 'Respaldo'),
       row('💾', 'Descargar respaldo', 'Guarda todas tus canciones en un archivo', () => void downloadBackup()),
       row('♻️', 'Restaurar respaldo', 'Recupera canciones desde un archivo', () => file.click()),

@@ -27,3 +27,20 @@ describe('validateBackup', () => {
     expect(() => validateBackup({ ...ok, songs: [{ ...song, source: 5 }] })).toThrow();
   });
 });
+
+describe('respaldo con repertorios', () => {
+  it('un respaldo antiguo (versión 1) sigue sirviendo y queda sin repertorios', () => {
+    const b = validateBackup(ok);
+    expect(b.version).toBe(2);
+    expect(b.repertorios).toEqual([]);
+  });
+  it('lee y limpia repertorios y favoritos', () => {
+    const b = validateBackup({ ...ok, version: 2, songs: [{ ...song, favorite: true }],
+      repertorios: [{ name: ' Misa ', items: [{ title: 'A ', shift: 2 }, { title: '', shift: 1 }, { shift: 3 }] }] });
+    expect(b.songs[0]?.favorite).toBe(true);
+    expect(b.repertorios).toEqual([{ name: 'Misa', items: [{ title: 'A', shift: 2 }] }]);
+  });
+  it('rechaza repertorios sin nombre', () => {
+    expect(() => validateBackup({ ...ok, repertorios: [{ name: '', items: [] }] })).toThrow();
+  });
+});

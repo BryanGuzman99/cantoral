@@ -13,7 +13,19 @@ export interface Song {
   parts: string[];      // partes de la misa (solo si tiene la categoría "Misa")
   tiempos: string[];    // tiempos litúrgicos (uno o varios)
   videoUrl: string;
-  source: string;       // letra con acordes (formato de chordpro.ts, acordes en letras americanas)
+  source: string;       // letra con acordes (acordes en letras americanas)
+  favorite?: boolean;
+  lastOpenedAt?: number;
+  createdAt: number;
+  updatedAt: number;
+}
+export type SongInput = Omit<Song, 'id' | 'createdAt' | 'updatedAt' | 'lastOpenedAt'>;
+
+export interface RepItem { songId: number; shift: number }  // shift = semitonos sobre el tono original
+export interface Repertorio {
+  id?: number;
+  name: string;
+  items: RepItem[];
   createdAt: number;
   updatedAt: number;
 }

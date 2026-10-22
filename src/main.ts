@@ -4,13 +4,21 @@ import { runLeave } from './ui/nav.ts';
 import { libraryScreen } from './ui/library.ts';
 import { viewScreen } from './ui/view.ts';
 import { editorScreen } from './ui/editor.ts';
+import { repertoriosScreen, repertorioScreen, importRepScreen } from './ui/repertorios.ts';
+import { favoritesScreen } from './ui/favorites.ts';
+import { bulkScreen } from './ui/bulk.ts';
 import { adminScreen, aboutScreen, homeScreen, settingsScreen, soonScreen } from './ui/screens.ts';
 
 type Route = [RegExp, (m: RegExpMatchArray) => HTMLElement | Promise<HTMLElement>];
 const routes: Route[] = [
   [/^\/?$/, () => homeScreen()],
   [/^\/songs(?:\/(edit))?$/, (m) => libraryScreen(m[1] === 'edit')],
-  [/^\/song\/(\d+)$/, (m) => viewScreen(Number(m[1]))],
+  [/^\/song\/(\d+)(?:\/(-?\d+))?$/, (m) => viewScreen(Number(m[1]), m[2] === undefined ? undefined : Number(m[2]))],
+  [/^\/repertorios$/, () => repertoriosScreen()],
+  [/^\/repertorio\/(\d+)$/, (m) => repertorioScreen(Number(m[1]))],
+  [/^\/import\/([A-Za-z0-9_-]+)$/, (m) => importRepScreen(m[1] ?? '')],
+  [/^\/favorites$/, () => favoritesScreen()],
+  [/^\/bulk$/, () => bulkScreen()],
   [/^\/edit\/(new|\d+)$/, (m) => editorScreen(m[1] === 'new' ? undefined : Number(m[1]))],
   [/^\/admin$/, () => adminScreen()],
   [/^\/settings$/, () => settingsScreen()],

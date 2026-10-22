@@ -46,7 +46,7 @@ export async function libraryScreen(manage: boolean): Promise<HTMLElement> {
     const res = filterSongs(songs, f);
     list.replaceChildren(...(res.length ? res.map((s) =>
       h('a', { class: 'row', href: manage ? `#/edit/${s.id}` : `#/song/${s.id}` },
-        h('div', {}, h('b', {}, s.title),
+        h('div', {}, h('b', {}, (s.favorite ? '★ ' : '') + s.title),
           h('span', {}, [s.author, s.parts.join(', '), s.tiempos.join(', ')].filter(Boolean).join(' · '))),
         h('span', { class: 'key' }, keyLabel(s.baseKey, s.savedShift, settings.notation))))
       : [h('p', { class: 'mut pad' }, 'No hay canciones con esos filtros. Prueba quitar alguno.')]));

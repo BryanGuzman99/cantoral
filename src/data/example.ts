@@ -1,4 +1,4 @@
-import type { SongInput } from './db.ts';
+import type { SongInput } from './types.ts';
 
 export const EXAMPLE: SongInput = {
   title: 'Alegre la mañana',

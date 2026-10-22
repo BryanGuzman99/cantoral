@@ -60,3 +60,6 @@ export async function importBackup(raw: unknown, mode: 'merge' | 'replace'): Pro
     return { added: fresh.length, skipped: backup.songs.length - fresh.length };
   });
 }
+
+export const setSavedShift = (id: number, shift: number): Promise<number> =>
+  db.songs.update(id, { savedShift: shift, updatedAt: Date.now() });

@@ -118,3 +118,14 @@ export async function importBackup(raw: unknown, mode: 'merge' | 'replace'): Pro
     return { added, skipped, reps };
   });
 }
+
+/** Borra todas las canciones. Con `alsoReps` borra también los repertorios; si no, quedan vacíos. */
+export async function deleteAllSongs(alsoReps: boolean): Promise<number> {
+  return db.transaction('rw', db.songs, db.repertorios, async () => {
+    const n = (await db.songs.toArray()).length;
+    await db.songs.clear();
+    if (alsoReps) await db.repertorios.clear();
+    else await db.repertorios.toCollection().modify((r) => { r.items = []; });
+    return n;
+  });
+}

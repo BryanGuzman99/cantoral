@@ -1,6 +1,6 @@
 import { h, hero, sheet, toast, segGroup } from './dom.ts';
 import { refresh } from './nav.ts';
-import { exportBackup, importBackup } from '../data/db.ts';
+import { deleteAllSongs, exportBackup, importBackup, listSongs } from '../data/db.ts';
 import { validateBackup } from '../data/backup.ts';
 import { applyTheme, saveSettings, settings } from '../state.ts';
 import type { Palette, Theme } from '../state.ts';
@@ -63,6 +63,29 @@ async function restoreFrom(file: File): Promise<void> {
     [{ label: 'Cancelar' }, { label: 'Agregar las que faltan', primary: true, run: run('merge') }, { label: 'Reemplazar todo', run: run('replace') }]);
 }
 
+
+async function wipeAll(): Promise<void> {
+  const total = (await listSongs()).length;
+  if (!total) { toast('El cancionero ya está vacío'); return; }
+  const word = h('input', { class: 'fld', 'aria-label': 'Escribe ELIMINAR para confirmar', placeholder: 'Escribe ELIMINAR', autocapitalize: 'characters' });
+  const reps = h('input', { type: 'checkbox', checked: true });
+  let close = (): void => undefined;
+  close = sheet(`¿Eliminar las ${total} canciones?`, h('div', {},
+    h('p', { class: 'mut' }, 'Se borra todo el cancionero de este teléfono y no se puede deshacer. Si quieres conservarlo, descarga primero un respaldo.'),
+    h('button', { type: 'button', class: 'pill full', onclick: () => void downloadBackup() }, '💾 Descargar respaldo primero'),
+    h('label', { class: 'chk' }, reps, 'También borrar los repertorios'),
+    word,
+    h('div', { class: 'actions' },
+      h('button', { type: 'button', class: 'pill', onclick: () => close() }, 'Cancelar'),
+      h('button', { type: 'button', class: 'pill primary', onclick: async () => {
+        if (word.value.trim().toUpperCase() !== 'ELIMINAR') { toast('Escribe ELIMINAR para confirmar'); return; }
+        close();
+        const n = await deleteAllSongs(reps.checked);
+        toast(`Se eliminaron ${n} canciones`);
+        refresh();
+      } }, 'Eliminar todo'))));
+}
+
 export function adminScreen(): HTMLElement {
   const file = h('input', { type: 'file', accept: '.json,application/json', hidden: true, onchange: (e: Event) => {
     const f = (e.target as HTMLInputElement).files?.[0]; if (f) void restoreFrom(f); (e.target as HTMLInputElement).value = '';
@@ -80,6 +103,8 @@ export function adminScreen(): HTMLElement {
       h('p', { class: 'lb' }, 'Respaldo'),
       row('💾', 'Descargar respaldo', 'Guarda todas tus canciones en un archivo', () => void downloadBackup()),
       row('♻️', 'Restaurar respaldo', 'Recupera canciones desde un archivo', () => file.click()),
+      h('p', { class: 'lb' }, 'Zona de pruebas'),
+      row('🗑', 'Eliminar todas las canciones', 'Vacía el cancionero; úsalo solo para pruebas', () => void wipeAll()),
       h('p', { class: 'lb' }, 'Tutoriales'),
       row('📝', 'Cómo escribir acordes, coros e introducción', 'El formato de una canción, con ejemplos', () => sheet('Cómo escribir una canción',
         h('div', {}, h('p', { class: 'mut' }, 'Escribe cada acorde entre corchetes, justo antes de la sílaba donde cambia. La app lo transporta sola, y puedes usar Do-Re-Mi o C-D-E.'),

@@ -25,7 +25,8 @@ export function hero(title: string, sub: string | null, backHref: string | null)
 
 export function topBar(title: string, backHref: string | null, ...right: Child[]): HTMLElement {
   return h('div', { class: 'bar' },
-    backHref ? h('a', { class: 'ib', href: backHref, 'aria-label': 'Volver' }, '←') : null,
+    backHref ? h('a', { class: 'ib', href: backHref, 'aria-label': 'Volver',
+      onclick: (e: Event) => { if (history.length > 1) { e.preventDefault(); history.back(); } } }, '←') : null,
     h('h2', {}, title), ...right);
 }
 

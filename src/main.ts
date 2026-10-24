@@ -1,7 +1,7 @@
 import './style.css';
 import { applyTheme } from './state.ts';
 import { runLeave } from './ui/nav.ts';
-import { libraryScreen } from './ui/library.ts';
+import { libraryScreen, resetLibState } from './ui/library.ts';
 import { viewScreen } from './ui/view.ts';
 import { editorScreen } from './ui/editor.ts';
 import { repertoriosScreen, repertorioScreen, importRepScreen } from './ui/repertorios.ts';
@@ -33,6 +33,7 @@ const app = document.querySelector<HTMLDivElement>('#app')!;
 async function render(): Promise<void> {
   runLeave();
   const path = decodeURIComponent(location.hash.replace(/^#/, '')) || '/';
+  if (!/^\/(songs|song|edit)(\/|$)/.test(path)) resetLibState();
   for (const [re, make] of routes) {
     const m = path.match(re);
     if (m) { app.replaceChildren(await make(m)); window.scrollTo(0, 0); return; }

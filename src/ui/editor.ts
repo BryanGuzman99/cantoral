@@ -71,7 +71,9 @@ export async function editorScreen(id?: number): Promise<HTMLElement> {
     };
     const newId = await saveSong(input, id);
     toast('Canción guardada');
-    location.hash = `#/song/${newId}`;
+    // Canción existente: se regresa a su pantalla. Canción nueva: la pantalla del editor se sustituye por la canción.
+    if (id !== undefined && history.length > 1) history.back();
+    else location.replace(`#/song/${newId}`);
   }
 
   const root = h('section', { class: 'scr' },
@@ -92,7 +94,7 @@ export async function editorScreen(id?: number): Promise<HTMLElement> {
       h('p', { class: 'lb' }, 'Vista previa'), h('div', { class: 'card pad scrollx' }, prev),
       old && h('button', { type: 'button', class: 'pill danger', onclick: async () => {
         if (await confirmBox(`¿Eliminar «${old.title}»?`, 'Esta acción no se puede deshacer.', 'Sí, eliminar')) {
-          await deleteSong(id!); toast('Canción eliminada'); location.hash = '#/songs';
+          await deleteSong(id!); toast('Canción eliminada'); location.replace('#/songs');
         }
       } }, 'Eliminar canción')));
   bar();

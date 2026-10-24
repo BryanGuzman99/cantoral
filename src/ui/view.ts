@@ -10,6 +10,8 @@ const MIN_Z = 0.7, MAX_Z = 2.6;
 const SPEEDS = [0, 0.35, 0.7, 1.2];
 
 export function notFound(): HTMLElement {
+  toast('Esa canción ya no existe');
+  queueMicrotask(() => location.replace('#/songs'));
   return h('section', { class: 'scr' }, topBar('No encontrada', '#/songs'), h('p', { class: 'mut pad' }, 'Esa canción ya no existe.'));
 }
 

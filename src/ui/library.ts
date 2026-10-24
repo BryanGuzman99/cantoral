@@ -1,5 +1,5 @@
 import { h, hero } from './dom.ts';
-import { refresh } from './nav.ts';
+import { onLeave, refresh } from './nav.ts';
 import { listSongs, saveSong } from '../data/db.ts';
 import { EXAMPLE } from '../data/example.ts';
 import { filterSongs, sortByTitle } from '../data/filter.ts';
@@ -8,9 +8,14 @@ import { CATEGORIES, MASS_PARTS, TIEMPOS } from '../data/types.ts';
 import { keyLabel } from '../engine/chords.ts';
 import { settings } from '../state.ts';
 
+// Filtros y posición del cancionero: se conservan al abrir una canción y regresar.
+const EMPTY: Filters = { q: '', category: '', part: '', tiempo: '' };
+let saved: { f: Filters; scroll: number } = { f: { ...EMPTY }, scroll: 0 };
+export const resetLibState = (): void => { saved = { f: { ...EMPTY }, scroll: 0 }; };
+
 export async function libraryScreen(manage: boolean): Promise<HTMLElement> {
   const songs = (await listSongs()).sort(sortByTitle);
-  const f: Filters = { q: '', category: '', part: '', tiempo: '' };
+  const f = saved.f;
   const root = h('section', { class: 'scr' },
     hero(manage ? 'EDITAR O ELIMINAR' : 'CANCIONERO', 'CANTORAL CATÓLICO', manage ? '#/admin' : '#/'));
 
@@ -30,7 +35,7 @@ export async function libraryScreen(manage: boolean): Promise<HTMLElement> {
   const tl = h('select', { class: 'fld', 'aria-label': 'Tiempo litúrgico', onchange: (e: Event) => { f.tiempo = (e.target as HTMLSelectElement).value; draw(); } },
     h('option', { value: '' }, 'Todos los tiempos litúrgicos'), ...TIEMPOS.map((t) => h('option', { value: t }, t)));
   const search = h('input', {
-    class: 'fld', type: 'search', placeholder: 'Buscar por título, autor o letra', 'aria-label': 'Buscar',
+    class: 'fld', type: 'search', placeholder: 'Buscar por título, autor o letra', 'aria-label': 'Buscar', value: f.q,
     oninput: (e: Event) => { f.q = (e.target as HTMLInputElement).value; draw(); },
   });
 
@@ -54,6 +59,10 @@ export async function libraryScreen(manage: boolean): Promise<HTMLElement> {
 
   root.append(h('div', { class: 'pad tight' }, search), chipsC, chipsP, h('div', { class: 'pad tight' }, tl), list,
     h('a', { class: 'fab', href: '#/edit/new', 'aria-label': 'Nueva canción' }, '＋'));
+  tl.value = f.tiempo;
   draw();
+  onLeave(() => { saved.scroll = list.scrollTop; });
+  const y = saved.scroll;
+  requestAnimationFrame(() => { list.scrollTop = y; });
   return root;
 }
